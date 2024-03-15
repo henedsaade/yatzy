@@ -26,11 +26,11 @@ function checkWin() {
     ];
     foreach ($winningCombinations as $combination) {
         [$a, $b, $c] = $combination;
-        if ($board[$a] && $board[$a] === $board[$b] && $board[$a] === $board[$c]) {
-            return true;
+        if ($board[$a] === 'O' && $board[$a] === $board[$b] && $board[$a] === $board[$c]) {
+            return true; // O wins
         }
     }
-    return false;
+    return false; // No winning combination found
 }
 
 // Handle AJAX requests
@@ -61,6 +61,7 @@ if (!isset($_SESSION['board'])) {
 }
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -72,13 +73,31 @@ if (!isset($_SESSION['board'])) {
 <body>
     <h1>Tic Tac Toe Game</h1>
     <div class="board" id="board">
-        <?php for ($i = 0; $i < 9; $i++): ?>
+        <?php
+        // Loop through the board cells and generate them dynamically
+        for ($i = 0; $i < 9; $i++):
+        ?>
             <div class="cell" data-cell></div>
         <?php endfor; ?>
     </div>
     <div class="winning-message" id="winningMessage">
         <div id="winningMessageText"></div>
         <button id="restartButton">Restart</button>
+    </div>
+    <div class="leaderboard-container" id="leaderboardContainer">
+        <!-- Leaderboard will be displayed here -->
+        <h2>Leaderboard</h2>
+        <ul id="leaderboardList">
+            <?php
+            // Retrieve leaderboard data from the PHP session and display it
+            if (isset($_SESSION['leaderboard'])) {
+                foreach ($_SESSION['leaderboard'] as $entry):
+            ?>
+                <li><?php echo $entry['name']; ?>: <?php echo $entry['score']; ?></li>
+            <?php endforeach;
+            }
+            ?>
+        </ul>
     </div>
     <script src="script.js" defer></script>
 </body>
